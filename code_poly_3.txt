@@ -1,0 +1,39 @@
+1
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+import pandas as pds
+dataframe = pds.read_csv('https://raw.githubusercontent.com/chihleebobo/0511/main/Polynomial_2.csv')
+print(dataframe.head())
+
+2
+import matplotlib.pyplot as plot
+plot.scatter(dataframe.Income, dataframe.Life_satisfaction,  color='green')
+plot.xlabel("Income")
+plot.ylabel("Life_satisfaction")
+plot.show()
+
+3
+x = dataframe.drop('Life_satisfaction', axis=1)
+y = dataframe['Life_satisfaction']
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=9) #random_state隨機條件
+print("原始資料庫的維度分別是:", dataframe.shape)
+print("原始資料庫的訓練集維度是:", x_train.shape)
+print("原始資料庫的測試集維度是:", x_test.shape)
+
+4
+poly_reg = PolynomialFeatures(degree = 2)
+x_poly = poly_reg.fit_transform(x_train)
+model0822 = LinearRegression()
+model0822.fit(x_poly, y_train)
+coef = model0822.coef_[1:]
+print ('係數_Coefficients: ', coef)
+print ('截距_Intercept: ',model0822.intercept_)
+
+5
+poly_reg_test = PolynomialFeatures(degree = 2)
+x_test_poly = poly_reg_test.fit_transform(x_test)
+predict_0822 = model0822.predict(x_test_poly)
+score0822 = mean_squared_error(predict_0822, y_test)
+print("Mean_Square_Error:", score0822)
